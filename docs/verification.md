@@ -112,8 +112,9 @@ it does not establish the tool set loaded by that Windows desktop chat.
 
 Codex supports deferred tool discovery: its tool-search implementation exposes
 matching deferred tools on a subsequent model call. A model's current summary
-count alone cannot diagnose missing server tools. The affected desktop chat's
-exact tool-search/call result remains necessary to resolve its reported count.
+count alone cannot diagnose missing server tools. The affected desktop chat
+did not make a real tool-search call for job listing; an analytics tool did
+execute and returned upstream HTTP 403.
 The screenshot also showed underscore-normalized names. Codex's MCP name
 sanitizer replaces dashes with underscores while retaining raw identities for
 protocol calls, so `emory-aap-jobs_list` becomes `emory_aap_jobs_list` in the
@@ -122,3 +123,19 @@ of the reported tool count. See the [name sanitizer](https://github.com/openai/c
 and [raw/callable tool mapping](https://github.com/openai/codex/blob/d92aae550180544fa2b7f656173c837271de6df3/codex-rs/codex-mcp/src/tools.rs).
 See the [Codex tool-search implementation](https://github.com/openai/codex/blob/d92aae550180544fa2b7f656173c837271de6df3/codex-rs/core/src/tools/handlers/tool_search_spec.rs)
 and [explicit skill invocation policy](https://developers.openai.com/codex/skills.md).
+
+Further source inspection identified a **64,000-byte combined Agent Plugin
+MCP tool-definition budget**, plus an 8,000-byte per-definition limit. Tools
+that exceed it are registered as hidden and absent from tool search. Direct
+MCP entries are exempt from this plugin-specific check. The ordinary catalog
+guard is 2,048 items. This is a likely explanation for the desktop's partial
+catalog; the exact 110-tool byte calculation and a direct connection in that
+Windows client (26.1027.30824) have not been reproduced. See the
+[exposure budget](https://github.com/openai/codex/blob/d92aae550180544fa2b7f656173c837271de6df3/codex-rs/core/src/mcp_tool_exposure.rs)
+and [catalog guard](https://github.com/openai/codex/blob/d92aae550180544fa2b7f656173c837271de6df3/codex-rs/codex-mcp/src/pagination.rs).
+
+A fresh GitHub-backed installation of revision
+`f628438493b51219c60aae1b0320fcbd722a6933` passed for both 0.1.2 plugins:
+platform connection and explicit-only setup policy present, no onboarding skill,
+authentication policy ON_USE. No browser consent or Windows client settings
+were changed by these checks.

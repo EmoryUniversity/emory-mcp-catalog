@@ -81,11 +81,33 @@ tool dependencies. Ordinary GHES/AAP requests do not activate the helper.
 
 ## Finding tools in Codex
 
-Codex can discover tools on demand, so a chat's summary of currently visible
-tools is not an authoritative server inventory. If job listing appears absent,
-ask it to search the connected platform for `emory_aap_jobs_list`
-tool and list one job with `page_size: 1`. This is a read operation; it should
-not launch a job. MCPHub advertises `emory-aap-jobs_list`; Codex normalizes
+Codex can discover tools on demand, but its current source also imposes a
+**64,000-byte combined budget for plugin MCP tool definitions** and an
+8,000-byte individual definition limit. Tools excluded by this budget are
+hidden even from tool search. This is a likely explanation for a Windows
+desktop client (26.1027.30824) exposing 110 tools while MCPHub returns 671;
+the exact client-side byte calculation has not been reproduced.
+See [Codex's plugin tool budget](https://github.com/openai/codex/blob/d92aae550180544fa2b7f656173c837271de6df3/codex-rs/core/src/mcp_tool_exposure.rs).
+
+A **direct MCP connection**, configured outside the plugin, bypasses that
+plugin-specific budget in current Codex source. Its ordinary MCP catalog
+guard is 2,048 tools, which accommodates this full endpoint. Use this option
+when you need the complete full catalog:
+
+```sh
+codex mcp add emory-platform-full --url https://mcphub.int.emory.edu/mcp/platform-official-full
+codex mcp login emory-platform-full
+```
+
+Disable the full plugin's connection in the client to avoid duplicate tools,
+then start a new chat. This uses the same server and permissions; no upstream
+token needs to be copied into Codex. Browser consent may be needed for the
+new direct connection. These commands were syntax-checked locally; the
+operator must complete browser login and verify this on the Windows host.
+
+To verify, ask the chat to discover `emory_aap_jobs_list` and list one job with
+`page_size: 1`. This is a read operation; it should not launch a job.
+MCPHub advertises `emory-aap-jobs_list`; Codex normalizes
 dashes to underscores in model-visible names and routes calls back to the
 original server name. Search using the name exposed by your client; its
 namespace can add a further prefix. Report the actual discovery/call error
@@ -95,7 +117,8 @@ Live MCPHub verification on 2026-11-02 returned **671** tools from the full
 route (632 AAP, 39 GHES), including `emory-aap-jobs_list`, which passed using
 the pilot's personal binding. The read-only route returned 35 tools. These
 counts describe the server response, not a guarantee of what every client
-loads. Refresh the marketplace/plugin and start a new chat after updating.
+loads. An analytics call returning HTTP 403 is a separate upstream AAP access
+failure, not evidence that job listing is absent from the server.
 
 ## Update
 
