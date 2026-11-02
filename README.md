@@ -35,7 +35,8 @@ codex plugin add emory-platform-full@emory-mcp
 Open the plugin's Authenticate/Connect action when prompted, then complete the
 browser flow. The client discovers OAuth and dynamic registration from MCPHub's challenge
 and metadata; no client secret or bearer key is included. The marketplace requests
-connection authentication on installation. Exact prompts depend on client
+connection authentication on use rather than installation. Explicitly connecting
+or attaching a server can still open the browser. Exact prompts depend on client
 version; installation does not prove browser consent or service access.
 
 This is a Git-backed local-client marketplace, separate from the universal
@@ -58,8 +59,9 @@ and [workspace marketplace import](https://learn.chatgpt.com/docs/enterprise/plu
    header value. For **emory-aap**, paste **only your personal AAP token**;
    the Emory AAP service adds the fixed Bearer prefix. Existing prefixed AAP
    bindings still work.
-4. Retry discovery and a read you are allowed to perform. Setup is manual;
-   no setup skill or onboarding action is bundled. Tokens are entered only in the dashboard, never chat,
+4. Retry discovery and a read you are allowed to perform. The optional setup
+   helper runs only when you explicitly select it; there is no automatic
+   onboarding action or setup prerequisite. Tokens are entered only in the dashboard, never chat,
    this repository, screenshots, issues, or command-line examples.
 
 MCPHub OAuth and upstream tokens have independent lifecycles. MCPHub access
@@ -70,6 +72,30 @@ in another, an exact re-login interval, or automatic replay of a rejected write.
 The read-only filter applies to its group route; other permitted routes may
 expose writes. Token scope and upstream resource RBAC remain authoritative.
 Neither installation nor a `read` OAuth scope substitutes for those controls.
+
+For connection help, explicitly select the plugin's **setup** skill in the skill
+picker, or invoke `$emory-platform-full:setup` (read-only variant:
+`$emory-platform-readonly:setup`). Both set
+`policy.allow_implicit_invocation: false` in `agents/openai.yaml` and declare no
+tool dependencies. Ordinary GHES/AAP requests do not activate the helper.
+
+## Finding tools in Codex
+
+Codex can discover tools on demand, so a chat's summary of currently visible
+tools is not an authoritative server inventory. If job listing appears absent,
+ask it to search the connected platform for `emory_aap_jobs_list`
+tool and list one job with `page_size: 1`. This is a read operation; it should
+not launch a job. MCPHub advertises `emory-aap-jobs_list`; Codex normalizes
+dashes to underscores in model-visible names and routes calls back to the
+original server name. Search using the name exposed by your client; its
+namespace can add a further prefix. Report the actual discovery/call error
+if it fails.
+
+Live MCPHub verification on 2026-11-02 returned **671** tools from the full
+route (632 AAP, 39 GHES), including `emory-aap-jobs_list`, which passed using
+the pilot's personal binding. The read-only route returned 35 tools. These
+counts describe the server response, not a guarantee of what every client
+loads. Refresh the marketplace/plugin and start a new chat after updating.
 
 ## Update
 
@@ -98,7 +124,8 @@ python3 scripts/validate.py
 - `.codex-plugin/plugin.json` and `.mcp.json` supply the synchronized legacy
   compatibility format. Legacy MCP configuration uses OAuth discovery from
   the server challenge, as does the schema-valid portable declaration.
-- Version **0.1.1** contains no bundled skills or automatic onboarding declaration.
+- Version **0.1.2** bundles explicit-only setup help, without automatic onboarding,
+  and requests authentication on use.
 - `catalog.json` is a simple inventory for humans and other consumers; it is not
   an additional Codex configuration mechanism.
 
@@ -108,10 +135,12 @@ exports remain outside this repository. See [verification](docs/verification.md)
 for what was actually tested and [design decisions](docs/design.md) for the
 relationship to the earlier distribution discussion.
 
-## Update from 0.1.0
+## Update from 0.1.0 or 0.1.1
 
-Version 0.1.1 removes the setup skills and onboarding declarations from both
-plugins. Follow the refresh/reinstall commands above, then start a new chat so
-the old setup instructions are no longer part of the conversation context.
+Version 0.1.1 removed setup skills. Version 0.1.2 restores them as optional,
+explicit-only helpers with no onboarding declaration. Follow the refresh/reinstall
+commands above, then start a new chat so old automatic setup instructions are
+no longer part of the conversation context. For the full plugin use
+`codex plugin add emory-platform-full@emory-mcp` after the marketplace upgrade.
 If you registered a manually cloned local marketplace, update that clone first
 with `git pull --ff-only` in its directory, then reinstall the plugin.

@@ -86,3 +86,39 @@ list, and no onboarding skill for both plugins. Portable plugin/MCP schemas and
 the public-package validator passed. A fresh GitHub-backed install of source
 revision `ef7e938b21716c1a0bba5ca4d2707040246e2a25` also passed for
 both 0.1.1 plugins: platform connection present, zero skills, no onboarding skill.
+
+## Version 0.1.2 — explicit-only setup help
+
+Both plugins restore a single namespaced `setup` helper with
+`agents/openai.yaml` setting `policy.allow_implicit_invocation: false`.
+Neither manifest declares an onboarding skill, and the helper has no tool
+dependencies. It addresses the requested connection issue without requiring
+credentials for unrelated upstreams. Marketplace authentication is `ON_USE`;
+explicit connection/attachment can still request browser authorization.
+
+Portable manifest/MCP schemas, skill YAML/frontmatter and public-package checks
+pass. An isolated Codex app-server loads each platform connection and its setup
+skill with `onboardingSkill: null`. The packaged policy files were checked for
+explicit-only invocation. Browser OAuth and model skill selection were not
+performed by the packaging checks.
+
+During investigation of a desktop chat reporting 110 tools, a fresh live
+`tools/list` returned 671 tools for the full route (632 AAP, 39 GHES) and 35 for
+the read-only route. Both included the exact `emory-aap-jobs_list` tool.
+Using the pilot's personal binding, job/template/inventory/host reads passed
+on both routes, and the full route's identity read passed. The temporary
+user-associated test key was deleted. This validates the server and binding;
+it does not establish the tool set loaded by that Windows desktop chat.
+
+Codex supports deferred tool discovery: its tool-search implementation exposes
+matching deferred tools on a subsequent model call. A model's current summary
+count alone cannot diagnose missing server tools. The affected desktop chat's
+exact tool-search/call result remains necessary to resolve its reported count.
+The screenshot also showed underscore-normalized names. Codex's MCP name
+sanitizer replaces dashes with underscores while retaining raw identities for
+protocol calls, so `emory-aap-jobs_list` becomes `emory_aap_jobs_list` in the
+model-facing tool name. This explains the exact-name mismatch, independently
+of the reported tool count. See the [name sanitizer](https://github.com/openai/codex/blob/d92aae550180544fa2b7f656173c837271de6df3/codex-rs/codex-mcp/src/mcp/mod.rs)
+and [raw/callable tool mapping](https://github.com/openai/codex/blob/d92aae550180544fa2b7f656173c837271de6df3/codex-rs/codex-mcp/src/tools.rs).
+See the [Codex tool-search implementation](https://github.com/openai/codex/blob/d92aae550180544fa2b7f656173c837271de6df3/codex-rs/core/src/tools/handlers/tool_search_spec.rs)
+and [explicit skill invocation policy](https://developers.openai.com/codex/skills.md).

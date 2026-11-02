@@ -20,7 +20,7 @@ def main():
     assert len(endpoints) == len(marketplace['plugins']) == 2
     paths = []
     for entry in marketplace['plugins']:
-        assert entry['policy'] == {'installation': 'AVAILABLE', 'authentication': 'ON_INSTALL'}
+        assert entry['policy'] == {'installation': 'AVAILABLE', 'authentication': 'ON_USE'}
         source = entry['source']
         assert source['source'] == 'local' and source['path'].startswith('./plugins/')
         folder = (ROOT / source['path']).resolve()
@@ -29,15 +29,19 @@ def main():
         compat = read(folder / '.codex-plugin/plugin.json')
         assert manifest['$schema'] == 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json'
         assert manifest['name'] == compat['name'] == entry['name'] == folder.name
-        assert manifest['version'] == compat['version']
+        assert manifest['version'] == compat['version'] == inventory['version']
         assert re.fullmatch(r'\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?', manifest['version'])
         extension = manifest['extensions']['com.openai']
         assert extension['interface'] == compat['interface']
         assert len(extension['interface']['shortDescription']) <= 30
         assert compat['mcpServers'] == './.mcp.json'
-        assert 'skills' not in compat and 'onboardingSkill' not in extension
-        assert not folder.joinpath('skills').exists()
-        assert not list(folder.rglob('SKILL.md'))
+        assert compat['skills'] == './skills/' and 'onboardingSkill' not in extension
+        skill = folder / 'skills/setup/SKILL.md'
+        assert list(folder.rglob('SKILL.md')) == [skill]
+        assert skill.read_text().startswith('---\nname: setup\n')
+        # Keep the validator dependency-free; accept only this minimal policy file.
+        policy = folder / 'skills/setup/agents/openai.yaml'
+        assert policy.read_text() == 'policy:\n  allow_implicit_invocation: false\n'
         assert not any('onboardingSkill' in e for e in compat.get('extensions', {}).values())
         connection = read(folder / 'mcp.json')
         assert connection['$schema'] == 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json'
@@ -67,7 +71,7 @@ def main():
         assert not re.search(r'-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----', text)
         assert not re.search(r'\b(?:ghp_|github_pat_|mcphub_)[A-Za-z0-9_]{20,}', text)
         assert not re.search(r'[A-Za-z0-9._%+-]+@emory\.edu', text), 'No user roster in public source'
-    print('PASS: two OAuth-discovered group definitions, contained sources, synchronized versions/metadata, no bundled/automatic setup skills and public-package boundaries')
+    print('PASS: two OAuth-discovered groups, synchronized versions/metadata, explicit-only setup, no onboarding, authentication on use and public-package boundaries')
 
 
 if __name__ == '__main__':
