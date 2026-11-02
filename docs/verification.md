@@ -53,10 +53,20 @@ workspace import and cloud connectivity have not been exercised by this test.
 A public repo is a distribution source; it is not proof that cloud clients can
 reach an internal service or that every installed host updates automatically.
 
-## Publication status
+## Publication and Git-backed installation
 
-Repository created publicly under the requested organization:
+Published public repository:
 https://github.com/EmoryUniversity/emory-mcp-catalog
 
-Local source and client loading checks passed. The initial catalog upload and
-a fresh installation from the GitHub-backed marketplace are being verified.
+A fresh isolated Codex host fetched the GitHub-backed marketplace and tested
+source revision `a555428d6f3b6f4e92e69b93ef29a33a89eaf790`:
+
+- `codex plugin marketplace add EmoryUniversity/emory-mcp-catalog` succeeded.
+- Both plugin entries were discoverable at 0.1.0.
+- Both plugins installed and were listed as enabled.
+- Actual app-server plugin/read returned the platform MCP connection and setup
+  onboarding skill for both plugins.
+
+The operator's real client configuration was unchanged. Browser OAuth consent
+was not performed by this packaging test; complete Authenticate/Connect from
+an Emory-connected host to verify the personal authorization flow.
