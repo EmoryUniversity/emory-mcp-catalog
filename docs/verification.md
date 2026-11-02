@@ -1,6 +1,6 @@
 # Verification — 2026-11-02
 
-## Local package
+## Initial 0.1.0 verification
 
 - Both portable plugin manifests validate against the published Agent Plugins
   1.0 plugin schema. Both portable MCP definitions validate against its MCP
@@ -70,3 +70,18 @@ source revision `a555428d6f3b6f4e92e69b93ef29a33a89eaf790`:
 The operator's real client configuration was unchanged. Browser OAuth consent
 was not performed by this packaging test; complete Authenticate/Connect from
 an Emory-connected host to verify the personal authorization flow.
+
+## Version 0.1.1 — setup skill removal
+
+Both portable and compatibility manifests are bumped to 0.1.1. The two setup
+SKILL.md files, skill directory declarations and onboardingSkill references
+are removed. Starter prompts now request tool discovery rather than setup.
+The validator requires both plugins to contain no skill files or onboarding
+declarations. Existing endpoint URLs, OAuth discovery, authentication policy
+and sharing remain unchanged.
+
+An isolated host with both 0.1.0 plugins installed was upgraded to 0.1.1. Actual
+app-server plugin/read returned platform as the MCP connection, an empty skill
+list, and no onboarding skill for both plugins. Portable plugin/MCP schemas and
+the public-package validator passed. GitHub-backed installation is verified
+after publication.

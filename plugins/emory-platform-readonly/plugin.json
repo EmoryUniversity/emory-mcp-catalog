@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "emory-platform-readonly",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reviewed read-only GHES and AAP Controller tools through Emory MCPHub.",
   "author": {
     "name": "EmoryUniversity",
@@ -27,9 +27,8 @@
           "Read"
         ],
         "websiteURL": "https://github.com/EmoryUniversity/emory-mcp-catalog",
-        "defaultPrompt": "Help me connect to Emory MCPHub and verify my personal platform access."
-      },
-      "onboardingSkill": "./skills/setup/SKILL.md"
+        "defaultPrompt": "Show the platform tools available to my account."
+      }
     }
   }
 }

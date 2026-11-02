@@ -1,7 +1,7 @@
 # Emory MCP Catalog
 
 A public GitHub.com marketplace maintained under **EmoryUniversity**. It contains
-versioned connection definitions and onboarding instructions for existing Emory
+versioned connection definitions and manual setup instructions for existing Emory
 MCPHub groups. Service access remains controlled by MCPHub and each person's
 upstream permissions.
 
@@ -58,8 +58,8 @@ and [workspace marketplace import](https://learn.chatgpt.com/docs/enterprise/plu
    header value. For **emory-aap**, paste **only your personal AAP token**;
    the Emory AAP service adds the fixed Bearer prefix. Existing prefixed AAP
    bindings still work.
-4. Retry discovery and a read you are allowed to perform. The setup skill can
-   guide this process. Tokens are entered only in the dashboard, never chat,
+4. Retry discovery and a read you are allowed to perform. Setup is manual;
+   no setup skill or onboarding action is bundled. Tokens are entered only in the dashboard, never chat,
    this repository, screenshots, issues, or command-line examples.
 
 MCPHub OAuth and upstream tokens have independent lifecycles. MCPHub access
@@ -98,7 +98,7 @@ python3 scripts/validate.py
 - `.codex-plugin/plugin.json` and `.mcp.json` supply the synchronized legacy
   compatibility format. Legacy MCP configuration uses OAuth discovery from
   the server challenge, as does the schema-valid portable declaration.
-- `skills/setup/SKILL.md` provides each plugin's setup workflow.
+- Version **0.1.1** contains no bundled skills or automatic onboarding declaration.
 - `catalog.json` is a simple inventory for humans and other consumers; it is not
   an additional Codex configuration mechanism.
 
@@ -107,3 +107,11 @@ user rosters, passwords, credentials, OAuth tokens, private keys and production
 exports remain outside this repository. See [verification](docs/verification.md)
 for what was actually tested and [design decisions](docs/design.md) for the
 relationship to the earlier distribution discussion.
+
+## Update from 0.1.0
+
+Version 0.1.1 removes the setup skills and onboarding declarations from both
+plugins. Follow the refresh/reinstall commands above, then start a new chat so
+the old setup instructions are no longer part of the conversation context.
+If you registered a manually cloned local marketplace, update that clone first
+with `git pull --ff-only` in its directory, then reinstall the plugin.

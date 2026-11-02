@@ -34,11 +34,11 @@ def main():
         extension = manifest['extensions']['com.openai']
         assert extension['interface'] == compat['interface']
         assert len(extension['interface']['shortDescription']) <= 30
-        assert compat['mcpServers'] == './.mcp.json' and compat['skills'] == './skills/'
-        setup = folder / extension['onboardingSkill']
-        assert setup.resolve().is_relative_to(folder) and setup.is_file()
-        skill = setup.read_text()
-        assert skill.startswith('---\nname: setup\ndescription: ') and '\n---\n' in skill[4:]
+        assert compat['mcpServers'] == './.mcp.json'
+        assert 'skills' not in compat and 'onboardingSkill' not in extension
+        assert not folder.joinpath('skills').exists()
+        assert not list(folder.rglob('SKILL.md'))
+        assert not any('onboardingSkill' in e for e in compat.get('extensions', {}).values())
         connection = read(folder / 'mcp.json')
         assert connection['$schema'] == 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json'
         assert set(connection['mcpServers']) == {'platform'}
@@ -67,7 +67,7 @@ def main():
         assert not re.search(r'-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----', text)
         assert not re.search(r'\b(?:ghp_|github_pat_|mcphub_)[A-Za-z0-9_]{20,}', text)
         assert not re.search(r'[A-Za-z0-9._%+-]+@emory\.edu', text), 'No user roster in public source'
-    print('PASS: two OAuth-discovered group definitions, contained sources, synchronized versions/metadata, setup skills and public-package boundaries')
+    print('PASS: two OAuth-discovered group definitions, contained sources, synchronized versions/metadata, no bundled/automatic setup skills and public-package boundaries')
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 {
   "name": "Emory MCP Catalog",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dashboard": "https://mcphub.int.emory.edu",
   "endpoints": [
     {

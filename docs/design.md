@@ -46,3 +46,8 @@ MCP entries and ON_INSTALL authentication, letting the client discover the live
 OAuth server and DCR endpoint from the challenge. No API-key input or static
 header is configured. This does not disable keys already accepted by MCPHub;
 server-side OAuth-only enforcement would be a separate change.
+
+Version 0.1.1 removes all packaged skills, onboardingSkill declarations and
+setup-oriented starter prompts. The operator reported that automatic setup
+was disruptive. Connection definitions and OAuth discovery remain unchanged;
+manual setup instructions live in README.md.
