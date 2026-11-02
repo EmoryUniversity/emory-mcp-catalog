@@ -47,13 +47,13 @@ browser OAuth grant for this plugin.
 
 On an Emory-connected Codex host, install from GitHub, Authenticate through
 MCPHub/SSO, complete consent, and verify group discovery and an authorized read.
-Test the setup action in a fresh conversation and installation during an
-existing conversation. Refresh/re-login behavior, cross-host/desktop pickup,
+After an update, start a new conversation to avoid previously injected skill
+instructions. Refresh/re-login behavior, cross-host/desktop pickup,
 workspace import and cloud connectivity have not been exercised by this test.
 A public repo is a distribution source; it is not proof that cloud clients can
 reach an internal service or that every installed host updates automatically.
 
-## Publication and Git-backed installation
+## Initial 0.1.0 publication and Git-backed installation
 
 Published public repository:
 https://github.com/EmoryUniversity/emory-mcp-catalog
@@ -83,5 +83,6 @@ and sharing remain unchanged.
 An isolated host with both 0.1.0 plugins installed was upgraded to 0.1.1. Actual
 app-server plugin/read returned platform as the MCP connection, an empty skill
 list, and no onboarding skill for both plugins. Portable plugin/MCP schemas and
-the public-package validator passed. GitHub-backed installation is verified
-after publication.
+the public-package validator passed. A fresh GitHub-backed install of source
+revision `ef7e938b21716c1a0bba5ca4d2707040246e2a25` also passed for
+both 0.1.1 plugins: platform connection present, zero skills, no onboarding skill.
