@@ -1,0 +1,27 @@
+{
+  "name": "Emory MCP Catalog",
+  "version": "0.1.0",
+  "dashboard": "https://mcphub.int.emory.edu",
+  "endpoints": [
+    {
+      "plugin": "emory-platform-readonly",
+      "url": "https://mcphub.int.emory.edu/mcp/platform-official-readonly",
+      "transport": "streamable-http",
+      "clientAuthentication": "oauth",
+      "upstreams": [
+        "GHES",
+        "AAP Controller"
+      ]
+    },
+    {
+      "plugin": "emory-platform-full",
+      "url": "https://mcphub.int.emory.edu/mcp/platform-official-full",
+      "transport": "streamable-http",
+      "clientAuthentication": "oauth",
+      "upstreams": [
+        "GHES",
+        "AAP Controller"
+      ]
+    }
+  ]
+}

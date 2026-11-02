@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "platform": {
+      "type": "http",
+      "url": "https://mcphub.int.emory.edu/mcp/platform-official-readonly"
+    }
+  }
+}

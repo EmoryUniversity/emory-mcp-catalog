@@ -1,0 +1,32 @@
+{
+  "name": "emory-mcp",
+  "interface": {
+    "displayName": "Emory MCP Catalog"
+  },
+  "plugins": [
+    {
+      "name": "emory-platform-readonly",
+      "source": {
+        "source": "local",
+        "path": "./plugins/emory-platform-readonly"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "emory-platform-full",
+      "source": {
+        "source": "local",
+        "path": "./plugins/emory-platform-full"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

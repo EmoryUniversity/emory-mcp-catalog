@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "platform": {
+      "type": "streamable-http",
+      "url": "https://mcphub.int.emory.edu/mcp/platform-official-readonly"
+    }
+  }
+}

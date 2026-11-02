@@ -1,0 +1,31 @@
+{
+  "name": "emory-platform-full",
+  "version": "0.1.0",
+  "description": "Enabled GHES and all pinned AAP Controller tools through Emory MCPHub under personal permissions.",
+  "author": {
+    "name": "EmoryUniversity",
+    "url": "https://github.com/EmoryUniversity"
+  },
+  "homepage": "https://github.com/EmoryUniversity/emory-mcp-catalog",
+  "repository": "https://github.com/EmoryUniversity/emory-mcp-catalog",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Emory Platform Full",
+    "shortDescription": "GHES and AAP full tools",
+    "longDescription": "Enabled GHES and all pinned AAP Controller tools through Emory MCPHub under personal permissions. Emory network connectivity, MCPHub OAuth, group access, and personal upstream credentials are required.",
+    "developerName": "EmoryUniversity",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/EmoryUniversity/emory-mcp-catalog",
+    "defaultPrompt": "Help me connect to Emory MCPHub and verify my personal platform access."
+  },
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/setup/SKILL.md"
+    }
+  }
+}
